@@ -1,0 +1,23 @@
+# Ambiente virtual
+gym_venv/
+venv/
+env/
+
+# Arquivos do Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de dados local
+db.sqlite3
+
+# Arquivos de mídia enviados
+/media/
+
+# Configurações sensíveis
+*.env
+.env
+
+# VSCode
+.vscode/

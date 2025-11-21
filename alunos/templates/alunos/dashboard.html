@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+    
+</head>
+<body class="bodyDashboard">
+    <div class="dashboard-container">
+        <div class="welcome">
+            <h1>Olá, Alana!</h1>
+            <p>Selecione uma das opções abaixo para gerenciar a academia.</p>
+        </div>
+
+        <div class="vertical-stack">
+            <div class="function-grid">
+                {# Opção 1: ALUNOS (Mantida) #}
+                <a href="{% url 'alunos:aluno_manager' %}" class="function-card">
+                    <div class="icon">🏋️</div>
+                    <h3>Alunos</h3>
+                    <p>Cadastrar, editar e listar todos os alunos.</p>
+                </a>
+                {# Opção 2: PAGAMENTOS (Mantida) #}
+                <a href="{% url 'alunos:pagamentos_manager' %}" class="function-card">
+                    <div class="icon">💵</div>
+                    <h3>Pagamentos</h3>
+                    <p>Registrar novas mensalidades e listar históricos.</p>
+                </a>
+                {# Opção 3: LOGOUT #}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="function-card">
+                        <div class="icon">🚪</div>
+                        <h3>Sair</h3>
+                        <p>Encerrar a sessão de administrador.</p>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

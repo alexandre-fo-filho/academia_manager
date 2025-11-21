@@ -1,0 +1,98 @@
+{% load static %}
+{% load widget_tweaks %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'alunos/css/global.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+    
+    <!-- CSS do Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Necessário para o Select2 (Busca de Alunos) -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body class="bodyDashboard">
+    <div class=" dashboard-container"> 
+        <a href="{% url 'alunos:pagamentos_manager' %}" class="btn-back" style="margin-bottom: 20px;">
+            &larr; 💳 Voltar para o Gerenciador de Pagamentos
+        </a>
+        <br>
+        <div class="container-fluid">
+        
+            <div class="login-container" style="max-width: 600px; padding: 30px; text-align: left;">
+                <h2 style="text-align: center;">{{ titulo }}</h2>
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Loop para renderizar todos os campos com estilo Bootstrap -->
+                    {% for field in form %}
+                        {% if field.name == 'aluno' %}
+                            <!-- Campo 'aluno' com Select2 (não recebe form-control, mas o Select2 o aplica) -->
+                            <div class="form-group mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Selecione o aluno para quem o pagamento será registrado. Use a busca para encontrar rapidamente.</small>
+                            </div>
+                        {% else %}
+                            <!-- Demais campos usando widget_tweaks para aplicar a classe form-control -->
+                            <div class="form-group mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                
+                                <!-- AQUI ESTÁ A CORREÇÃO: Usamos o filtro |add_class -->
+                                {{ field|add_class:"form-control" }}
+
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                                
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <button type="submit" class="btn-login mt-4">
+                        {% if is_editing %}
+                            Salvar Edição
+                        {% else %}
+                            Registrar Pagamento
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>  
+    <!-- jQuery, Select2 e Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Inicializa o Select2 no campo 'aluno' (ID do campo é 'id_aluno' por padrão no Django)
+            $('#id_aluno').select2({
+                placeholder: "Digite o nome ou parte do nome do aluno...",
+                allowClear: true, // Permite limpar a seleção
+                width: '100%'     // Garante que o Select2 ocupe 100% da largura
+            });
+        });
+    </script>
+</body>
+</html>

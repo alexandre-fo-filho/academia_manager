@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'alunos/css/global.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+    
+</head>
+<body class="bodyDashboard">
+    
+    <div class="dashboard-container">
+        <div class="back-link-container">
+        <!-- Botão para voltar ao Dashboard -->
+        <a href="{% url 'alunos:dashboard' %}" class="btn-back">
+            🏠Voltar para Dashboard
+        </a>
+        </div>
+        <br>
+        <div class="welcome">
+            <h1>💳 Gerenciamento de Pagamentos</h1>
+            <p>Selecione uma ação para continuar o gerenciamento de pagamentos.</p>
+        </div>
+
+        <!-- Container dos Botões/Cards -->
+        <div class="function-grid">
+            
+            <!-- 1. CADASTRAR NOVO PAGAMENTO -->
+            <a href="{% url 'alunos:cadastro_pagamento' %}" class="action-card register-card">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Registrar Novo Pagamento</h3>
+                <p>Registre uma nova mensalidade, puxando o aluno cadastrado.</p>
+            </a>
+
+            <!-- 2. HISTÓRICO DE PAGAMENTOS -->
+            <a href="{% url 'alunos:historico_pagamentos' %}" class="action-card history-card">
+                <i class="fas fa-search-dollar"></i>
+                <h3>Histórico por Período</h3>
+                <p>Visualizar todos os pagamentos efetuados em um intervalo de datas.</p>
+            </a>
+
+            <!-- 3. ALUNOS VENCIDOS / A VENCER -->
+            <a href="{% url 'alunos:vencimentos_pagamentos' %}" class="action-card due-card">
+                <i class="fas fa-calendar-times"></i>
+                <h3>Controle de Vencimentos</h3>
+                <p>Ver alunos com mensalidades próximas do vencimento ou vencidas.</p>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

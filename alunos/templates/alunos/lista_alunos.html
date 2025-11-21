@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">  
+    
+<script>
+    // Função JavaScript para formatar o número de telefone (apenas para exibição)
+    function formatPhoneNumber(phoneNumber) {
+        // Verifica se o número existe e se tem o tamanho aproximado esperado para DDI+DDD+9 dígitos (12 ou 13 caracteres)
+        if (!phoneNumber || typeof phoneNumber !== 'string' || phoneNumber.length < 12) {
+            return phoneNumber; // Retorna o original se for inválido
+        }
+        
+        // Remove tudo que não for dígito
+        const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+        
+        // Padrão esperado para o Brasil (Ex: 55 74 9 8113 3855 -> 13 dígitos)
+        // Estrutura: +XX (XX) X XXXX-XXXX
+        
+        // Tenta aplicar o padrão de 13 dígitos (DDI + DDD + 9 dígitos)
+        const match = cleaned.match(/^(\d{2})(\d{2})(\d)(\d{4})(\d{4})$/);
+        
+        if (match) {
+            // Retorna o formato: +55 (74) 9 8113-3855
+            return '+' + match[1] + ' (' + match[2] + ') ' + match[3] + ' ' + match[4] + '-' + match[5];
+        }
+
+        // Se o número for menor (ex: sem DDI), retorna o original
+        return phoneNumber; 
+    }
+</script>
+</head>
+<body class="bodyDashboard">
+    <div class="dashboard-container">
+
+        <div class="back-link-container">
+            <a href="{% url 'alunos:aluno_manager' %}" class="btn-back">
+                &larr; 🏋️ Voltar para Gerenciar Alunos
+            </a>
+        </div>
+
+        <div class="welcome">
+            <h1>Lista de Alunos Cadastrados</h1>
+            <p>Total de {{ alunos|length }} aluno(s) encontrado(s).</p>
+        </div>
+
+        <div class="search-bar">
+            <form method="GET" action="{% url 'alunos:lista_alunos' %}" class="search-form">
+                <input type="text" name="q" placeholder="Buscar por Nome ou CPF..." value="{{ search_query }}" class="search-input">
+                <button type="submit" class="search-button">Buscar</button>
+                {% if search_query %}
+                    <a href="{% url 'alunos:lista_alunos' %}" class="clear-button">Limpar</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="alunos-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Foto</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Idade</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td data-label="Foto">
+                            {% if aluno.foto and aluno.foto.url %}
+                                <img src="{{ aluno.foto.url }}" 
+                             alt="Foto de {{ aluno.nome }}" 
+                             class="aluno-avatar-table"
+                             onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/333333?text=N/A';">
+                             {% elif aluno.foto %}
+                                <!-- Opção 2: Se o campo 'foto' for apenas o nome do arquivo, construindo o caminho relativo -->
+                                <img src="/media/alunos_fotos/{{ aluno.foto }}" 
+                                    alt="Foto de {{ aluno.nome }}" 
+                                    class="aluno-avatar-table"
+                                    onerror="this.onerror=null; this.src='https://placehold.co/50x50/cccccc/333333?text=N/A';">
+                            {% else %}
+                                <!-- Placeholder se a foto não estiver cadastrada -->
+                                <img src="https://placehold.co/50x50/cccccc/333333?text=N/A" 
+                                    alt="Foto não disponível" 
+                                    class="aluno-avatar-table">
+                            {% endif %}
+                        </td>
+                        <td data-label="Nome">{{ aluno.nome }}</td>
+                        <td data-label="CPF">{{ aluno.cpf }}</td>
+                        <td data-label="Telefone">
+                            {% if aluno.link_whatsapp %}
+                                <a href="{{ aluno.link_whatsapp }}" target="_blank" title="Enviar WhatsApp para {{ aluno.nome }}">
+                                <!-- MODIFICADO: Chama a função JS no valor do campo para formatar APENAS para exibição -->
+                                <script>
+                                    document.write(formatPhoneNumber("{{ aluno.whatsapp_formatado | default:aluno.whatsapp }}"));
+                                </script>
+                            </a>
+                            {% else %}
+                                <script>
+                                    document.write(formatPhoneNumber("{{ aluno.whatsapp | default:'' }}"));
+                                </script>
+                            {% endif %}
+                        </td>
+                        <td data-label="Idade">{{ aluno.idade }} anos</td>
+                        <td data-label="Status" class="status-{{ aluno.status_display|lower }}">
+                            {{ aluno.status_display }}
+                        </td>
+                        <td data-label="Ações" class="action-buttons">
+                            <a href="{% url 'alunos:editar_aluno' pk=aluno.pk %}" class="btn-action edit-btn" title="Editar informações do aluno">✏️</a>
+                            <a href="{% url 'alunos:excluir_aluno' pk=aluno.pk %}" class="btn-action delete" title="Excluir">🗑️</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhum aluno cadastrado ou encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Academia</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+</head>
+<body class="bodyLogin">
+    <div class="login-container">
+        <img src="{% static 'assets/logo.png' %}" alt="Logo da Academia" class="logo">
+        <h2>Login do Administrador</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label for="{{ form.username.id_for_label }}">Usuário</label>
+                {{ form.username }} 
+            </div>
+            <br>
+            <div class="input-group">
+                <label for="{{ form.password.id_for_label }}">Senha</label>
+                {{ form.password }}
+            </div>
+            <br>
+            <button type="submit" class="btn-login">Entrar</button>
+
+            {% if form.errors %}
+                <p class="error">Nome de usuário ou senha inválidos.</p>
+            {% endif %}
+            <p id="errorMsg" class="error"></p>
+        </form>
+        
+        <p>
+            <a href="{% url 'password_reset' %}">Esqueceu sua senha?</a>
+        </p>
+
+    </div>
+</body>
+</html>

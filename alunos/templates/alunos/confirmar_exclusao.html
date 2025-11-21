@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+</head>
+<body class="bodyDashboard">
+    <div class="container">
+        <div class="function-card card-exclusao">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Confirmação de Exclusão</h4>
+            </div>
+            <div class="card-body">
+                <p>Você tem certeza que deseja excluir o aluno <span class="nome-aluno"><em>{{ aluno.nome }}</em></span>?</p>
+                <p class="text-danger fw-bold">Esta ação é irreversível e removerá todos os pagamentos e dados de matrícula associados a este aluno.</p>
+                
+                <!-- O formulário aponta para a URL de exclusão com o método POST -->
+                <form method="post" action="{% url 'alunos:excluir_aluno' pk=aluno.pk %}">
+                    {% csrf_token %} <!-- CRÍTICO: Token de segurança -->
+                    <a href="{% url 'alunos:lista_alunos' %}">
+                        <button type="submit" class="btn btn-danger me-2">Sim, Excluir Definitivamente</button>
+                    </a>
+                    
+                    <a href="{% url 'alunos:lista_alunos' %}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

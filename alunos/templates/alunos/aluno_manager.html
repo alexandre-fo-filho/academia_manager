@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href={% static 'assets/favicon.ico' %} type="image/x-icon">
+    
+</head>
+<body class="bodyDashboard">
+    <div class="dashboard-container">
+
+    <div class="back-link-container">
+        <!-- Botão para voltar ao Dashboard -->
+        <a href="{% url 'alunos:dashboard' %}" class="btn-back">
+            🏠Voltar para Dashboard
+        </a>
+        <br>
+    </div>
+
+    <div class="welcome">
+        <h1>Gerenciar Alunos</h1>
+        <p>Selecione uma ação para continuar o gerenciamento de alunos.</p>
+    </div>
+
+    <div class="function-grid">
+        
+        <!-- Opção 1: Cadastrar Novo Aluno -->
+        <a href="{% url 'alunos:cadastro_aluno' %}" class="function-card">
+            <div class="icon">➕</div>
+            <h3>Cadastrar Novo</h3>
+            <p>Adicionar um novo aluno à academia.</p>
+        </a>
+
+        <!-- Opção 2: Listar Alunos -->
+        <!-- NOTA: Precisaremos criar a view e URL 'lista_alunos' em breve -->
+        <a href="{% url 'alunos:lista_alunos' %}" class="function-card">
+            <div class="icon">📋</div>
+            <h3>Listar Alunos</h3>
+            <p>Visualizar e editar todos os alunos cadastrados.</p>
+        </a>
+    </div>
+</body>
+</html>
