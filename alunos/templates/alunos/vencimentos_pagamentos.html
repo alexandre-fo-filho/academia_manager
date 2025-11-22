@@ -66,7 +66,22 @@
                                                 {% with url_message="Olá, "|add:aluno.nome|add:". Tudo bem? A sua mensalidade da academia CT AÇÃO de R$"|add:valor_formatado|add:" venceu no dia "|add:data_formatada|add:". Por favor, regularize para evitar interrupção dos serviços. Obrigada!" %}
                                                 
                                                 <!-- 3. MUDANÇA CRUCIAL: Usamos a API estável 'api.whatsapp.com/send' -->
-                                                <a href="https://api.whatsapp.com/send?phone={{ aluno.whatsapp }}&text={{ url_message|urlencode }}" 
+                                                <a href="https://web.whatsapp.com/send?phone={{ aluno.whatsapp }}&text={{ url_message|urlencode }}" 
+                                                onclick="
+                                                    let phone = '{{ aluno.whatsapp }}';
+                                                    let msg = '{{ url_message|urlencode }}';
+
+                                                    // Detecta se é celular
+                                                    let isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+                                                    if (isMobile) {
+                                                        // Celular → abre whatsapp:// (app)
+                                                        window.open('https://api.whatsapp.com/send?phone=' + phone + '&text=' + msg, '_blank');
+                                                    } else {
+                                                        // PC → abre WhatsApp Web
+                                                        window.open('https://web.whatsapp.com/send?phone=' + phone + '&text=' + msg, '_blank');
+                                                    }
+                                                "
                                                 target="_blank" 
                                                 class="btn btn-sm btn-success" 
                                                 title="Enviar Lembrete para {{ aluno.nome }}"> 
