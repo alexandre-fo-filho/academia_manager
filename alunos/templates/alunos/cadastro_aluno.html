@@ -116,7 +116,12 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        {% if form.modalidades.errors %}<div class="text-danger small">{{ form.modalidades.errors }}</div>{% endif %}
+                        {% if form.modalidades.errors %}
+                            <div class="text-danger small">
+                                {{ form.modalidades.errors }}
+                            </div>
+                        {% endif %}
+                        </div>
                     </div>
                     <br>
                     <div class="col-md-4 mb-3">
