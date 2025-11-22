@@ -8,7 +8,10 @@ SECRET_KEY = 'django-insecure-h(#=%(+#%om_5%#%v#m38e@8#-(gth+n0nh05*0w#&*3ns=&m^
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "saintmosca.pythonanywhere.com",
+    "www.saintmosca.pythonanywhere.com"
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
